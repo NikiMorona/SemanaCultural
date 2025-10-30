@@ -214,7 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
   async function carregarNoticias() {
     try {
       const url =
-        "https://3jsbbjk7.api.sanity.io/v2025-10-17/data/query/production?query=*%5B_type%20%3D%3D%20%27news%27%5D%7Ctitle%2C%20date%2C%20excerpt%2C%20link%2C%20%22image%22%3Aimage.asset-%3Eurl%7D%20%7C%20order(date%20desc)";
+        "https://3jsbbjk7.api.sanity.io/v2025-10-30/data/query/production?query=*%0A%5B_type+%3D%3D+%27news%27%5D%0A%7Btitle%2C+excerpt%2C+link%2C+%22image%22%3Aimage.asset-%3Eurl%7D&perspective=drafts";
 
       const response = await fetch(url, { method: "GET" });
       const json = await response.json();
