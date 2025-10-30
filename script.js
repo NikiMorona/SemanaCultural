@@ -210,6 +210,134 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+    // Carrossel de Notícias
+  async function carregarNoticias() {
+    try {
+      const url =
+        "https://3jsbbjk7.api.sanity.io/v2025-10-17/data/query/production?query=*%5B_type%20%3D%3D%20%27news%27%5D%7Ctitle%2C%20date%2C%20excerpt%2C%20link%2C%20%22image%22%3Aimage.asset-%3Eurl%7D%20%7C%20order(date%20desc)";
+
+      const response = await fetch(url, { method: "GET" });
+      const json = await response.json();
+      console.log("Sanity API Response for News:", json);
+
+      const carousel = document.getElementById("news-carousel");
+      const dotsContainer = document.getElementById("news-dots");
+
+      carousel.innerHTML = "";
+      dotsContainer.innerHTML = "";
+
+      if (json.result && json.result.length > 0) {
+        json.result.forEach((noticia, index) => {
+          // Criar item de notícia
+          const newsItem = document.createElement("div");
+          newsItem.classList.add("news-item");
+
+          const img = document.createElement("img");
+          img.src =
+            noticia.image ||
+            "https://via.placeholder.com/900x400/5C7E34/FFFFFF?text=Sem+Imagem";
+          img.alt = noticia.title || "Notícia";
+          img.classList.add("news-image");
+
+          const content = document.createElement("div");
+          content.classList.add("news-content");
+
+          const date = document.createElement("div");
+          date.classList.add("news-date");
+          date.innerText = noticia.date
+            ? new Date(noticia.date).toLocaleDateString("pt-BR", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })
+            : "Data não disponível";
+
+          const title = document.createElement("h3");
+          title.innerText = noticia.title || "Notícia sem título";
+
+          const excerpt = document.createElement("p");
+          excerpt.innerText =
+            noticia.excerpt || "Descrição não disponível.";
+
+          const link = document.createElement("a");
+          link.href = noticia.link || "#";
+          link.classList.add("news-link");
+          link.innerText = "Leia mais →";
+          if (noticia.link) {
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+          }
+
+          content.append(date, title, excerpt, link);
+          newsItem.append(img, content);
+          carousel.append(newsItem);
+
+          // Criar dot de navegação
+          const dot = document.createElement("span");
+          dot.classList.add("dot");
+          if (index === 0) dot.classList.add("active");
+          dot.addEventListener("click", () => goToSlide(index));
+          dotsContainer.append(dot);
+        });
+
+        // Configurar navegação do carrossel
+        let currentIndex = 0;
+        const totalSlides = json.result.length;
+
+        function goToSlide(index) {
+          currentIndex = index;
+          carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+          updateDots();
+        }
+
+        function updateDots() {
+          const dots = document.querySelectorAll(".dot");
+          dots.forEach((dot, index) => {
+            dot.classList.toggle("active", index === currentIndex);
+          });
+        }
+
+        document.getElementById("news-prev").addEventListener("click", () => {
+          currentIndex = currentIndex > 0 ? currentIndex - 1 : totalSlides - 1;
+          goToSlide(currentIndex);
+        });
+
+        document.getElementById("news-next").addEventListener("click", () => {
+          currentIndex = currentIndex < totalSlides - 1 ? currentIndex + 1 : 0;
+          goToSlide(currentIndex);
+        });
+
+        // Auto-play (opcional)
+        setInterval(() => {
+          currentIndex = currentIndex < totalSlides - 1 ? currentIndex + 1 : 0;
+          goToSlide(currentIndex);
+        }, 7000); // Troca a cada 7 segundos
+      } else {
+        const mensagem = document.createElement("div");
+        mensagem.classList.add("news-item");
+        mensagem.innerHTML = `
+          <div class="news-content" style="text-align: center; padding: 3rem;">
+            <p style="font-size: 1.2rem; color: #19481E;">Nenhuma notícia cadastrada no momento.</p>
+          </div>
+        `;
+        carousel.append(mensagem);
+      }
+    } catch (error) {
+      console.error("Erro ao carregar notícias:", error);
+      const carousel = document.getElementById("news-carousel");
+      carousel.innerHTML = "";
+      const mensagem = document.createElement("div");
+      mensagem.classList.add("news-item");
+      mensagem.innerHTML = `
+        <div class="news-content" style="text-align: center; padding: 3rem;">
+          <p style="font-size: 1.2rem; color: #19481E;">Erro ao carregar notícias. Tente novamente mais tarde.</p>
+        </div>
+      `;
+      carousel.append(mensagem);
+    }
+  }
+
   carregarEventos();
   carregarGaleria();
+  carregarNoticias();
 });
