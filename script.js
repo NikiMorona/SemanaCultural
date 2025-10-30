@@ -242,15 +242,6 @@ document.addEventListener("DOMContentLoaded", () => {
           const content = document.createElement("div");
           content.classList.add("news-content");
 
-          const date = document.createElement("div");
-          date.classList.add("news-date");
-          date.innerText = noticia.date
-            ? new Date(noticia.date).toLocaleDateString("pt-BR", {
-                day: "2-digit",
-                month: "long",
-                year: "numeric",
-              })
-            : "Data não disponível";
 
           const title = document.createElement("h3");
           title.innerText = noticia.title || "Notícia sem título";
@@ -268,7 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
             link.rel = "noopener noreferrer";
           }
 
-          content.append(date, title, excerpt, link);
+          content.append(title, excerpt, link);
           newsItem.append(img, content);
           carousel.append(newsItem);
 
