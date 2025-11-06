@@ -298,11 +298,6 @@ document.addEventListener("DOMContentLoaded", () => {
           goToSlide(currentIndex);
         });
 
-        // Auto-play (opcional)
-        setInterval(() => {
-          currentIndex = currentIndex < totalSlides - 1 ? currentIndex + 1 : 0;
-          goToSlide(currentIndex);
-        }, 7000); // Troca a cada 7 segundos
       } else {
         const mensagem = document.createElement("div");
         mensagem.classList.add("news-item");

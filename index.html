@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="style.css" />
     <script src="script.js"></script>
   </head>
+
   <body>
+    <!-- Botão flutuante do WhatsApp -->
     <a
       href="https://api.whatsapp.com/send?phone=5545988266426&text=Ol%C3%A1!%20Gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20a%20Semana%20Cultural!"
       class="whatsapp-float"
@@ -19,6 +21,8 @@
         alt="WhatsApp"
       />
     </a>
+
+    <!-- Cabeçalho -->
     <header>
       <nav>
         <div class="logo">Teko ara ava guarani</div>
@@ -33,15 +37,17 @@
         </div>
         <ul class="nav-links" id="nav-links">
           <li><a href="#inicio">Início</a></li>
+          <li><a href="#sobre">Sobre</a></li>
           <li><a href="#galeria">Galeria</a></li>
           <li><a href="#eventos">Eventos</a></li>
-          <li><a href="#sobre">Sobre</a></li>
+          <li><a href="#noticias">Notícias</a></li>
+          <li><a href="#localizacao">Localização</a></li>
           <li><a href="#contato">Contato</a></li>
         </ul>
       </nav>
     </header>
 
-    <!-- Hero -->
+    <!-- Início / Hero -->
     <section id="inicio" class="hero">
       <div class="bg"></div>
       <div class="bg"></div>
@@ -50,26 +56,6 @@
         <h1>Bem-vindo à Nossa Comunidade</h1>
         <p><em>Teko ara ava guarani</em></p>
         <p>Preservando tradições, cultivando o futuro da cultura Guarani.</p>
-      </div>
-    </section>
-
-    <!-- Galeria -->
-    <section id="galeria" class="gallery-section">
-      <div class="container">
-        <h2 class="section-title">Nossa História em Imagens</h2>
-        <div class="gallery-grid" id="gallery-grid">
-          <!-- Conteúdo dinâmico será inserido aqui via JavaScript -->
-        </div>
-      </div>
-    </section>
-
-    <!-- Eventos -->
-    <section id="eventos" class="events-section">
-      <div class="container">
-        <h2 class="section-title">Eventos Culturais</h2>
-        <div class="events-grid" id="events-grid">
-          <!-- Conteúdo dinâmico será inserido aqui via JavaScript -->
-        </div>
       </div>
     </section>
 
@@ -139,28 +125,40 @@
       </div>
     </section>
 
-    <!-- Carrossel de Notícias -->
-<section id="noticias" class="news-section">
-  <div class="container">
-    <h2 class="section-title">Notícias e Acontecimentos</h2>
-    <div class="news-carousel-container">
-      <button class="carousel-btn prev" id="news-prev" aria-label="Notícia anterior">
-        ‹
-      </button>
-      <div class="news-carousel" id="news-carousel">
-        <!-- Conteúdo dinâmico será inserido aqui via JavaScript -->
+    <!-- Galeria -->
+    <section id="galeria" class="gallery-section">
+      <div class="container">
+        <h2 class="section-title">Nossa História em Imagens</h2>
+        <div class="gallery-grid" id="gallery-grid">
+          <!-- Conteúdo dinâmico será inserido aqui via JavaScript -->
+        </div>
       </div>
-      <button class="carousel-btn next" id="news-next" aria-label="Próxima notícia">
-        ›
-      </button>
-    </div>
-    <div class="carousel-dots" id="news-dots">
-      <!-- Dots de navegação serão inseridos aqui via JavaScript -->
-    </div>
-  </div>
-</section>
+    </section>
 
-    <!-- Mapa -->
+    <!-- Eventos -->
+    <section id="eventos" class="events-section">
+      <div class="container">
+        <h2 class="section-title">Eventos Culturais</h2>
+        <div class="events-grid" id="events-grid">
+          <!-- Conteúdo dinâmico será inserido aqui via JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Notícias -->
+    <section id="noticias" class="news-section">
+      <div class="container">
+        <h2 class="section-title">Notícias e Acontecimentos</h2>
+        <div class="news-carousel-container">
+          <button class="carousel-btn prev" id="news-prev" aria-label="Notícia anterior">‹</button>
+          <div class="news-carousel" id="news-carousel"></div>
+          <button class="carousel-btn next" id="news-next" aria-label="Próxima notícia">›</button>
+        </div>
+        <div class="carousel-dots" id="news-dots"></div>
+      </div>
+    </section>
+
+    <!-- Localização -->
     <section id="localizacao" class="map-section">
       <div class="container">
         <h2 class="section-title">Localização</h2>
