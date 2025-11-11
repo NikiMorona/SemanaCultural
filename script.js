@@ -326,4 +326,24 @@ document.addEventListener("DOMContentLoaded", () => {
   carregarEventos();
   carregarGaleria();
   carregarNoticias();
+
+  // Botão Ler mais - Nossa História (mobile)
+  const readMoreBtn = document.getElementById("read-more-btn");
+  const historyFull = document.getElementById("history-full");
+
+  if (readMoreBtn && historyFull) {
+    readMoreBtn.addEventListener("click", () => {
+      const isExpanded = historyFull.classList.toggle("expanded");
+      readMoreBtn.classList.toggle("expanded");
+      
+      if (isExpanded) {
+        readMoreBtn.innerHTML = 'Ler menos';
+        // Scroll suave até o conteúdo expandido
+        historyFull.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      } else {
+        readMoreBtn.innerHTML = 'Ler mais';
+      }
+    });
+  }
 });
+

@@ -804,3 +804,65 @@ footer {
     font-size: 1.3rem;
   }
 }
+
+/* Responsividade: Ler mais na História (mobile) */
+@media (max-width: 768px) {
+  .history-full {
+    display: none;
+    margin-top: 1rem;
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  .history-full.expanded {
+    display: block;
+  }
+
+  .read-more-btn {
+    display: block;
+    margin: 1.5rem auto 0;
+    padding: 0.8rem 2rem;
+    background: #9a0500;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 1rem;
+  }
+
+  .read-more-btn:hover {
+    background: #7a0400;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(154, 5, 0, 0.4);
+  }
+
+  .read-more-btn .arrow {
+    transition: transform 0.3s;
+    display: inline-block;
+    margin-left: 8px;
+  }
+
+  .read-more-btn.expanded .arrow {
+    transform: rotate(180deg);
+  }
+}
+
+/* Desktop: tudo visível, botão escondido */
+@media (min-width: 769px) {
+  .history-short {
+    display: none;
+  }
+  .read-more-btn {
+    display: none;
+  }
+  .history-full {
+    display: block !important;
+  }
+}
+
+/* Animação suave ao expandir */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
