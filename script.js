@@ -104,116 +104,111 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-async function carregarGaleria() {
-  try {
-    const url =
-      "https://3jsbbjk7.api.sanity.io/v2025-10-17/data/query/production?query=*%0A%5B_type+%3D%3D+%27album%27%5D%0A%7Btitle%2C+description%2C+%22cover%22%3A+cover.asset-%3Eurl%2C+photos%5B%5D%7B%22url%22%3A+asset-%3Eurl%7D%7D&perspective=drafts";
+  async function carregarGaleria() {
+    try {
+      const url =
+        "https://3jsbbjk7.api.sanity.io/v2025-11-11/data/query/production?query=*%5B_type+%3D%3D+%22album%22%5D+%7C+order%28title+asc%29%7Btitle%2Cdescription%2C%22cover%22%3Acover.asset-%3Eurl%2Cphotos%5B%5D%7B%22url%22%3Aasset-%3Eurl%7D%7D&perspective=drafts";
 
-    const response = await fetch(url, { method: "GET" });
-    const json = await response.json();
-    console.log("Sanity API Response for Gallery:", json);
-
-    const galleryGrid = document.getElementById("gallery-grid");
-    const modal = document.createElement("div");
-    modal.classList.add("modal");
-    const modalContent = document.createElement("div");
-    modalContent.classList.add("modal-content");
-    const closeBtn = document.createElement("button");
-    closeBtn.classList.add("modal-close");
-    closeBtn.innerText = "×";
-    const modalPhotos = document.createElement("div");
-    modalPhotos.classList.add("modal-photos");
-    modalContent.append(closeBtn, modalPhotos);
-    modal.append(modalContent);
-    document.body.append(modal);
-
-    galleryGrid.innerHTML = "";
-
-    if (json.result && json.result.length > 0) {
-      // PASSO PRINCIPAL: ORDENA OS ÁLBUNS POR ORDEM CRONOLÓGICA
-      const albunsOrdenados = json.result.sort((a, b) => {
-        // Extrai o número da edição (ex: "16ª Semana" → 16)
-        const numA = parseInt(a.title.match(/(\d+)ª/)?.[1] || 0);
-        const numB = parseInt(b.title.match(/(\d+)ª/)?.[1] || 0);
-        return numA - numB; // crescente: 16, 17, 18, 19
+      const response = await fetch(url, {
+        method: "GET",
       });
 
-      albunsOrdenados.forEach((album) => {
-        const item = document.createElement("div");
-        item.classList.add("gallery-item");
+      const json = await response.json();
+      console.log("Sanity API Response for Gallery:", json);
+      const galleryGrid = document.getElementById("gallery-grid");
+      const modal = document.createElement("div");
+      modal.classList.add("modal");
+      const modalContent = document.createElement("div");
+      modalContent.classList.add("modal-content");
+      const closeBtn = document.createElement("button");
+      closeBtn.classList.add("modal-close");
+      closeBtn.innerText = "×";
+      const modalPhotos = document.createElement("div");
+      modalPhotos.classList.add("modal-photos");
+      modalContent.append(closeBtn, modalPhotos);
+      modal.append(modalContent);
+      document.body.append(modal);
 
-        const img = document.createElement("img");
-        img.src = `${album.cover}?w=600&h=400&fit=crop&auto=format&q=75`;
-        img.alt = `${album.title} - Capa`;
-        img.classList.add("gallery-cover");
+      galleryGrid.innerHTML = "";
 
-        const content = document.createElement("div");
-        content.classList.add("gallery-content");
-        const title = document.createElement("h3");
-        title.innerText = album.title || "Álbum sem título";
-        const desc = document.createElement("p");
-        desc.innerText = album.description || "Sem descrição";
-        content.append(title, desc);
+      if (json.result && json.result.length > 0) {
+        json.result.forEach((album) => {
+          const item = document.createElement("div");
+          item.classList.add("gallery-item");
 
-        item.append(img, content);
+          const img = document.createElement("img");
+          img.src = `${album.cover}?w=600&h=400&fit=crop&auto=format&q=75`;
+          img.alt = `${album.title} - Capa`;
+          img.classList.add("gallery-cover");
 
-        item.addEventListener("click", () => {
-          modalPhotos.innerHTML = "";
-          modal.classList.add("active");
-          const photos = album.photos || [];
-          if (album.cover && photos.length === 0) {
-            const photoImg = document.createElement("img");
-            photoImg.src = `${album.cover}?w=800&auto=format&q=75`;
-            photoImg.alt = `${album.title} - Capa`;
-            photoImg.classList.add("modal-photo");
-            modalPhotos.append(photoImg);
-          } else {
-            photos.forEach((photo) => {
-              if (photo.url) {
-                const photoImg = document.createElement("img");
-                photoImg.src = `${photo.url}?w=800&auto=format&q=75`;
-                photoImg.alt = `${album.title} - Foto`;
-                photoImg.classList.add("modal-photo");
-                modalPhotos.append(photoImg);
-              }
-            });
-          }
+          const content = document.createElement("div");
+          content.classList.add("gallery-content");
+          const title = document.createElement("h3");
+          title.innerText = album.title || "Álbum sem título";
+          const desc = document.createElement("p");
+          desc.innerText = album.description || "Sem descrição";
+          content.append(title, desc);
+
+          item.append(img, content);
+
+          item.addEventListener("click", () => {
+            modalPhotos.innerHTML = "";
+            modal.classList.add("active");
+            const photos = album.photos || [];
+            if (album.cover && photos.length === 0) {
+              const photoImg = document.createElement("img");
+              photoImg.src = `${album.cover}?w=800&auto=format&q=75`;
+              photoImg.alt = `${album.title} - Capa`;
+              photoImg.classList.add("modal-photo");
+              modalPhotos.append(photoImg);
+            } else {
+              photos.forEach((photo) => {
+                if (photo.url) {
+                  const photoImg = document.createElement("img");
+                  photoImg.src = `${photo.url}?w=800&auto=format&q=75`;
+                  photoImg.alt = `${album.title} - Foto`;
+                  photoImg.classList.add("modal-photo");
+                  modalPhotos.append(photoImg);
+                }
+              });
+            }
+          });
+
+          galleryGrid.append(item);
         });
+      } else {
+        const mensagem = document.createElement("p");
+        mensagem.style.textAlign = "center";
+        mensagem.style.gridColumn = "1 / -1";
+        mensagem.style.fontSize = "1.2rem";
+        mensagem.style.color = "#19481E";
+        mensagem.innerText = "Nenhum álbum cadastrado no momento.";
+        galleryGrid.append(mensagem);
+      }
 
-        galleryGrid.append(item);
+      closeBtn.addEventListener("click", () => {
+        modal.classList.remove("active");
       });
-    } else {
+
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.classList.remove("active");
+        }
+      });
+    } catch (error) {
+      console.error("Erro ao carregar galeria:", error);
+      const galleryGrid = document.getElementById("gallery-grid");
+      galleryGrid.innerHTML = "";
       const mensagem = document.createElement("p");
       mensagem.style.textAlign = "center";
       mensagem.style.gridColumn = "1 / -1";
       mensagem.style.fontSize = "1.2rem";
       mensagem.style.color = "#19481E";
-      mensagem.innerText = "Nenhum álbum cadastrado no momento.";
+      mensagem.innerText =
+        "Erro ao carregar galeria. Tente novamente mais tarde.";
       galleryGrid.append(mensagem);
     }
-
-    closeBtn.addEventListener("click", () => {
-      modal.classList.remove("active");
-    });
-
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) {
-        modal.classList.remove("active");
-      }
-    });
-  } catch (error) {
-    console.error("Erro ao carregar galeria:", error);
-    const galleryGrid = document.getElementById("gallery-grid");
-    galleryGrid.innerHTML = "";
-    const mensagem = document.createElement("p");
-    mensagem.style.textAlign = "center";
-    mensagem.style.gridColumn = "1 / -1";
-    mensagem.style.fontSize = "1.2rem";
-    mensagem.style.color = "#19481E";
-    mensagem.innerText = "Erro ao carregar galeria. Tente novamente mais tarde.";
-    galleryGrid.append(mensagem);
   }
-}
 
     // Carrossel de Notícias
   async function carregarNoticias() {
