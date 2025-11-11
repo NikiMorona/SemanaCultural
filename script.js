@@ -7,43 +7,101 @@ document.addEventListener("DOMContentLoaded", () => {
     toggle.classList.toggle("active");
   });
 
-  const imagens = ["imagens/foto1.png", "imagens/foto2.png"];
+// ====== CARROSSEL DINÂMICO COM FOTOS DOS ÁLBUNS DO SANITY ======
+const hero = document.querySelector(".hero");
+let indice = 0;
+let imagensDinamicas = [];
 
-  const hero = document.querySelector(".hero");
-  let indice = 0;
+// Cria as duas camadas de background
+const bg1 = document.createElement("div");
+const bg2 = document.createElement("div");
+bg1.classList.add("bg", "active");
+bg2.classList.add("bg");
+hero.appendChild(bg1);
+hero.appendChild(bg2);
 
-  // cria as duas camadas
-  const bg1 = document.createElement("div");
-  bg1.classList.add("bg", "active");
+// Função para carregar fotos dos álbuns
+async function carregarImagensHero() {
+  try {
+    const url = "https://3jsbbjk7.api.sanity.io/v2025-10-17/data/query/production?query=*[_type == 'album']{photos[]{ 'url': asset->url }, 'cover': cover.asset->url }";
+    const response = await fetch(url);
+    const json = await response.json();
 
-  hero.appendChild(bg1);
+    const todasFotos = [];
 
-  function trocaImagem() {
-    const atual = hero.querySelector(".bg.active");
-    const proxima = hero.querySelector(".bg:not(.active)");
+    json.result.forEach(album => {
+      // Adiciona a capa
+      if (album.cover) todasFotos.push(album.cover);
+      // Adiciona todas as fotos do álbum
+      if (album.photos && album.photos.length > 0) {
+        album.photos.forEach(photo => {
+          if (photo.url) todasFotos.push(photo.url);
+        });
+      }
+    });
 
-    indice = (indice + 1) % imagens.length;
-    proxima.style.backgroundImage = `url(${imagens[indice]})`;
+    // Embaralha para ficar mais natural (ou deixa em ordem se preferir)
+    imagensDinamicas = todasFotos
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 20); // pega até 20 fotos (evita carregar demais)
 
-    proxima.style.opacity = 1;
-    atual.style.opacity = 0;
+    // Se não tiver fotos, usa as fixas como fallback
+    if (imagensDinamicas.length === 0) {
+      imagensDinamicas = [
+        "imagens/foto1.png",
+        "imagens/foto2.png"
+      ];
+    }
 
-    atual.classList.remove("active");
-    proxima.classList.add("active");
+    // Aplica as duas primeiras imagens
+    document.querySelectorAll(".bg").forEach((bg, i) => {
+      bg.style.backgroundImage = `url(${imagensDinamicas[i] || imagensDinamicas[0]})`;
+      bg.style.opacity = i === 0 ? 1 : 0;
+    });
+
+    // Inicia o carrossel
+    setInterval(trocaImagem, 5000);
+
+  } catch (erro) {
+    console.error("Erro ao carregar imagens do hero:", erro);
+    // Fallback seguro
+    imagensDinamicas = ["imagens/foto1.png", "imagens/foto2.png"];
+    document.querySelectorAll(".bg").forEach((bg, i) => {
+      bg.style.backgroundImage = `url(${imagensDinamicas[i]})`;
+    });
+    setInterval(trocaImagem, 5000);
   }
+}
 
-  document.querySelectorAll(".bg").forEach((bg, i) => {
-    bg.style.position = "absolute";
-    bg.style.inset = 0;
-    bg.style.backgroundSize = "cover";
-    bg.style.backgroundPosition = "center";
-    bg.style.transition = "opacity 2s ease-in-out";
-    bg.style.zIndex = 0;
-    bg.style.opacity = i === 0 ? 1 : 0;
-    bg.style.backgroundImage = `url(${imagens[i]})`;
-  });
+// Função de troca com fade
+function trocaImagem() {
+  const atual = hero.querySelector(".bg.active");
+  const proxima = hero.querySelector(".bg:not(.active)");
 
-  setInterval(trocaImagem, 5000); // troca a cada 5 segundos
+  indice = (indice + 1) % imagensDinamicas.length;
+  const proximaImagem = imagensDinamicas[indice];
+
+  proxima.style.backgroundImage = `url(${proximaImagem})`;
+  proxima.style.opacity = 1;
+  atual.style.opacity = 0;
+
+  atual.classList.remove("active");
+  proxima.classList.add("active");
+}
+
+// Estiliza os backgrounds
+document.querySelectorAll(".bg").forEach((bg, i) => {
+  bg.style.position = "absolute";
+  bg.style.inset = 0;
+  bg.style.backgroundSize = "cover";
+  bg.style.backgroundPosition = "center";
+  bg.style.transition = "opacity 2s ease-in-out";
+  bg.style.zIndex = 0;
+  bg.style.opacity = i === 0 ? 1 : 0;
+});
+
+// Inicia o carregamento das imagens
+carregarImagensHero();
 
   async function carregarEventos() {
     try {
