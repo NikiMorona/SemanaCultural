@@ -45,13 +45,6 @@ async function carregarImagensHero() {
       .sort(() => Math.random() - 0.5)
       .slice(0, 20); // pega até 20 fotos (evita carregar demais)
 
-    // Se não tiver fotos, usa as fixas como fallback
-    if (imagensDinamicas.length === 0) {
-      imagensDinamicas = [
-        "imagens/foto1.png",
-        "imagens/foto2.png"
-      ];
-    }
 
     // Aplica as duas primeiras imagens
     document.querySelectorAll(".bg").forEach((bg, i) => {
