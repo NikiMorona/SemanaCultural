@@ -57,12 +57,6 @@ async function carregarImagensHero() {
 
   } catch (erro) {
     console.error("Erro ao carregar imagens do hero:", erro);
-    // Fallback seguro
-    imagensDinamicas = ["imagens/foto1.png", "imagens/foto2.png"];
-    document.querySelectorAll(".bg").forEach((bg, i) => {
-      bg.style.backgroundImage = `url(${imagensDinamicas[i]})`;
-    });
-    setInterval(trocaImagem, 5000);
   }
 }
 
